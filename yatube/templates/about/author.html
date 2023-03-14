@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block title %}Об авторе проекта{% endblock %}
+{% block content %}
+{% load static %}
+<h1>Привет, я автор</h1>
+<p>
+  Меня зовут Артём, мне 18 лет, я студент 1 курса бакалавриата НИТУ МИСИС.
+</p>
+<p> 
+  На создание данного сайта у меня ушло много времени и сил. 
+</p>
+<p>
+  Ссылка на мой GitHub: https://github.com/yhtrg
+</p>
+<p>
+    Ну и лого не хватает конечно.
+    <p>
+        <img src='{% static "img/logo.png"%}' width="250" height="250" class="d-inline-block align-top" alt="">
+    </p>
+</p>
+{% endblock %}

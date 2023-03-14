@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block title %}Технологии{% endblock %}
+{% block content %}
+{% load static %}
+<div class="row">
+  <h1>Вот что я умею</h1>
+  <aside class="col-12 col-md-3">
+    <ul class="list-group list-group-flush">
+      <li class="list-group-item">
+        Python
+      </li>
+      <li class="list-group-item">
+        Django
+      </li>
+      <li class="list-group-item">
+        C#
+      </li>
+      <li class="list-group-item">
+        C++
+      </li>
+      <li class="list-group-item">
+        Java Script
+      </li>
+    </ul>
+  </aside>
+  <article class="col-12 col-md-9">
+    <p>Я справился со многими задачами, иногда даже не
+        понимая что я пишу :).
+    </p>
+    <p>
+        Ну и лого не хватает конечно.
+        <p>
+            <img src='{% static "img/logo.png"%}' width="250" height="250" class="d-inline-block align-top" alt="">
+        </p>
+    </p>
+  </article>
+</div>
+{% endblock %}
