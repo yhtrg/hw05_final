@@ -1,11 +1,12 @@
 from http import HTTPStatus
- 
+
+from django.core.cache import cache
 from django.test import TestCase, Client
 from django.urls import reverse
- 
+
 from ..models import Group, Post, User
- 
- 
+
+
 class PostsURLTests(TestCase):
     @classmethod
     def setUpClass(cls):
@@ -32,12 +33,12 @@ class PostsURLTests(TestCase):
                                      kwargs={'username': cls.auth})
         cls.PROFILE_UNFOLLOW = reverse('posts:profile_unfollow',
                                        kwargs={'username': cls.auth})
- 
+
     def setUp(self):
         self.guest_client = Client()
         self.authorized_user = Client()
         self.authorized_user.force_login(self.user)
- 
+
     def test_redirect_anonymous(self):
         """перенаправление анонимного пользователя на страницу логина."""
         url_names_redirect = [
@@ -53,15 +54,16 @@ class PostsURLTests(TestCase):
             with self.subTest(adress=adress):
                 response = self.guest_client.get(adress, follow=True)
                 self.assertRedirects(response, redirect)
- 
+
     def test_post_edit_list_url_redirect_authorized_on_profile(self):
         """Страница по адресу /posts/<int:post_id>/edit/ перенаправит
         авторизированного пользователя на страницу пользователя."""
         response = self.authorized_user.get(self.POST_EDIT, follow=True)
-        self.assertRedirects(response, self.PROFILE)
- 
+        self.assertRedirects(response, self.POST_DETAIL)
+
     def test_namespace_uses_correct_pages(self):
         """Шаблон использует соответствующий namespace:name."""
+        cache.clear()
         templates_pages_names = [
             ('posts/index.html', self.INDEX),
             ('posts/group_list.html', self.GROUP_POSTS),
@@ -77,7 +79,7 @@ class PostsURLTests(TestCase):
             with self.subTest(template=template):
                 response = self.authorized_user.get(address)
                 self.assertTemplateUsed(response, template)
- 
+
     def test_urls_uses_correct_namespace(self):
         """URL-адрес использует соответствующий namespace:name."""
         templates_url_names = [
@@ -95,7 +97,7 @@ class PostsURLTests(TestCase):
         for address, urls in templates_url_names:
             with self.subTest(address=address):
                 self.assertEqual(address, urls, 'not correct')
- 
+
     def test_exists_at_desired_location(self):
         """Проверка доступности адрессов."""
         names = [
