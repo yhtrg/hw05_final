@@ -66,20 +66,15 @@ def post_create(request):
     form = PostForm(
         request.POST or None,
         files=request.FILES or None)
-    if request.method == 'POST':
-        if form.is_valid():
-            post = form.save(commit=False)
-            post.author = request.user
-            form.save()
-            return redirect(
-                reverse(
-                    'posts:profile',
-                    kwargs={'username': request.user}))
-        return render(request, template, {'form': form})
-    context = {
-        'form': form,
-    }
-    return render(request, template, context)
+    if form.is_valid():
+        post = form.save(commit=False)
+        post.author = request.user
+        form.save()
+        return redirect(
+            reverse(
+                'posts:profile',
+                kwargs={'username': request.user}))
+    return render(request, template, {'form': form})
 
 
 @login_required
@@ -119,14 +114,8 @@ def add_comment(request, post_id):
 @login_required
 def follow_index(request):
     template = "posts/follow.html"
-    follower = Follow.objects.filter(user=request.user).values_list(
-        "author_id", flat=True
-    )
-    posts = Post.objects.filter(author_id__in=follower)
-    context = {
-        "title": "Избранные посты",
-    }
-    context.update(get_page_context(posts, request))
+    posts = Post.objects.filter(author__following__user=request.user)
+    context = get_page_context(posts, request)
     return render(request, template, context)
 
 
@@ -141,5 +130,5 @@ def profile_follow(request, username):
 @login_required
 def profile_unfollow(request, username):
     author = get_object_or_404(User, username=username)
-    Follow.objects.get(user=request.user, author=author).delete()
+    Follow.objects.filter(user=request.user, author=author).delete()
     return redirect("posts:follow_index")

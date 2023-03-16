@@ -3,8 +3,6 @@
 {% block header %}Последние обновления на сайте{% endblock %}
 {% block content %}
   {% include 'posts/includes/switcher.html' %}
-  {% load cache %}
-  {% cache 20 index_page %}
   <h1>Последние обновления на сайте</h1>
   <article>
   {% for post in page_obj %}
@@ -13,5 +11,4 @@
   {% endfor %}
   {% include 'includes/paginator.html' %}
   </article>
-  {% endcache %}
 {% endblock %}
